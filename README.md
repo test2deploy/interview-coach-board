@@ -1,1 +1,1 @@
-# interviewcoach
+# interview-coach-board
