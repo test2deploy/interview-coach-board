@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Interview Rehearsal Coach · Release Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EAF0F0; --surface:#FFFFFF; --ink:#0F1B22; --muted:#5A6672; --line:#D5DEDD;
+    --teal:#127069; --teal-deep:#0B4D48; --teal-soft:#E1EFED;
+    --pass:#2E7D4F; --run:#127069; --queue:#94A0A6; --defer:#B4BDC0;
+    --panel:#0F2A2A; --panelink:#CFE3E0;
+    --shadow:0 1px 2px rgba(15,27,34,.05),0 10px 30px -14px rgba(15,27,34,.22);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:
+     radial-gradient(1200px 400px at 15% -5%, #DDEBE9 0%, transparent 60%),
+     var(--bg);
+    color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1040px;margin:0 auto;padding:34px 20px 84px;}
+  code{font-family:"IBM Plex Mono",monospace;font-size:.9em;background:#DEE7E6;padding:1px 6px;border-radius:5px;}
+
+  /* header / run bar */
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin:0 0 10px;}
+  h1{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:35px;line-height:1.06;letter-spacing:-.022em;margin:0 0 8px;}
+  .sub{color:var(--muted);font-size:15.5px;max-width:62ch;margin:0 0 20px;}
+  .runbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--panel);color:var(--panelink);border-radius:12px;padding:12px 16px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;margin-bottom:34px;box-shadow:var(--shadow);}
+  .runpill{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:#fff;background:rgba(255,255,255,.08);padding:5px 11px;border-radius:20px;}
+  .runpill .beacon{width:8px;height:8px;border-radius:50%;background:#57C9B6;box-shadow:0 0 0 0 rgba(87,201,182,.6);animation:beacon 1.6s infinite;}
+  @keyframes beacon{0%{box-shadow:0 0 0 0 rgba(87,201,182,.55);}70%{box-shadow:0 0 0 7px rgba(87,201,182,0);}100%{box-shadow:0 0 0 0 rgba(87,201,182,0);}}
+  .runbar .sep{opacity:.35;}
+  .runbar b{color:#fff;font-weight:600;}
+  .runbar .grow{flex:1;}
+
+  /* pipeline lane */
+  .lane-label{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;}
+  .lane{display:flex;overflow-x:auto;padding:4px 2px 18px;margin-bottom:30px;}
+  .node{flex:0 0 auto;width:128px;display:flex;flex-direction:column;align-items:center;cursor:pointer;background:none;border:none;font-family:inherit;padding:0;}
+  .rail{display:flex;align-items:center;width:100%;}
+  .ln{height:2px;flex:1;background:var(--line);}
+  .ring{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;margin:0 6px;color:var(--queue);}
+  .node.passed .ring{border-color:var(--pass);color:var(--pass);}
+  .node.running .ring{border-color:var(--run);color:var(--run);box-shadow:0 0 0 5px rgba(18,112,105,.14);}
+  .node.queued .ring{border-color:#CBD5D4;color:var(--queue);}
+  .node.deferred .ring{border-color:#DEE4E3;color:var(--defer);border-style:dashed;}
+  .node.passed .ln{background:var(--pass);}
+  .node.running .ln.left{background:var(--pass);}
+  .node:first-child .ln.left{background:transparent;}
+  .node:last-child .ln.right{background:transparent;}
+  .node .nid{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);margin-top:10px;letter-spacing:.03em;}
+  .node .nname{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:12.5px;line-height:1.2;text-align:center;margin-top:3px;padding:0 4px;}
+  .node .ncount{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted);margin-top:6px;}
+  .node.running .nname{color:var(--teal-deep);}
+  .node:hover .ring{transform:translateY(-2px);transition:transform .12s;}
+
+  /* jobs (stage detail) */
+  .job{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;scroll-margin-top:14px;}
+  .job.flash{animation:flash 1.1s ease;}
+  @keyframes flash{0%{box-shadow:0 0 0 3px rgba(18,112,105,.35);}100%{box-shadow:var(--shadow);}}
+  .job{display:grid;grid-template-columns:5px 1fr;}
+  .stripe{background:var(--line);}
+  .job.passed .stripe{background:var(--pass);}
+  .job.running .stripe{background:var(--run);}
+  .job.queued .stripe{background:#D3DBDA;}
+  .job.deferred .stripe{background:#E2E7E6;}
+  .jbody{padding:16px 18px;}
+  .jhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .jglyph{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px;}
+  .job.passed .jglyph{color:var(--pass);}
+  .job.running .jglyph{color:var(--run);}
+  .job.queued .jglyph,.job.deferred .jglyph{color:var(--queue);}
+  .jid{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);}
+  .jname{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
+  .jbadge{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.05em;padding:3px 9px;border-radius:20px;margin-left:auto;}
+  .job.passed .jbadge{background:#E4F1E9;color:var(--pass);}
+  .job.running .jbadge{background:var(--teal-soft);color:var(--teal-deep);}
+  .job.queued .jbadge{background:#EDF1F0;color:var(--queue);}
+  .job.deferred .jbadge{background:#EFF2F1;color:var(--defer);}
+  .jcount{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);}
+  .log{background:#FAFCFB;border:1px solid #E9EEED;border-radius:9px;padding:8px 4px;margin-top:11px;}
+  .step{display:flex;align-items:flex-start;gap:11px;padding:5px 12px;font-size:14px;font-family:"IBM Plex Sans",sans-serif;}
+  .step .g{font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:1.5;flex:0 0 auto;width:14px;text-align:center;}
+  .step.passed .g{color:var(--pass);}
+  .step.running .g{color:var(--run);}
+  .step.queued .g{color:#B7C0C4;}
+  .step.queued{color:var(--muted);}
+  .step .rtag{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--run);background:var(--teal-soft);padding:1px 7px;border-radius:12px;margin-left:6px;white-space:nowrap;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:18px;margin:26px 0 0;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);}
+  .legend span{display:flex;align-items:center;gap:8px;}
+  .legend .g{font-weight:600;width:14px;text-align:center;}
+  .footer{margin-top:22px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);line-height:1.75;}
+
+  @media (max-width:520px){ h1{font-size:28px;} }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Release Pipeline · v1</p>
+  <h1>Interview Rehearsal Coach</h1>
+  <p class="sub">Shipping a rehearsal coach for QA / DevOps engineers who interview in English as a second language. This board tracks the build like a pipeline — every stage a job, every task a check.</p>
+
+  <div class="runbar">
+    <span class="runpill"><span class="beacon"></span>IN PROGRESS</span>
+    <span class="sep">|</span>
+    <span>branch <b>main · v1</b></span>
+    <span class="sep">|</span>
+    <span>stage <b>03 calibrate</b></span>
+    <span class="grow"></span>
+    <span id="checks"></span>
+    <span class="sep">|</span>
+    <span>updated <b>27 Jul 2026</b></span>
+  </div>
+
+  <p class="lane-label">Pipeline</p>
+  <div class="lane" id="lane"></div>
+
+  <div id="jobs"></div>
+
+  <div class="legend">
+    <span><span class="g" style="color:var(--pass)">✓</span> passed</span>
+    <span><span class="g" style="color:var(--run)">▶</span> running</span>
+    <span><span class="g" style="color:var(--queue)">○</span> queued</span>
+    <span><span class="g" style="color:var(--defer)">⋯</span> deferred (post-launch)</span>
+  </div>
+
+  <div class="footer">
+    Reflects real build status — checks show work done, not a wishlist.<br>
+    Data lives in the <code>STAGES</code> array at the bottom of this file; flip a check's <code>s</code> to update the board.<br>
+    Publish on GitHub: rename to <code>index.html</code> or point GitHub Pages at it.
+  </div>
+</div>
+
+<script>
+const STAGES = [
+  { id:"00·validate", name:"Validation", status:"passed", steps:[
+    { t:"Reframe: live answer-feeding → ethical rehearsal coach", s:"passed" },
+    { t:"Niche chosen: second-language English speakers", s:"passed" },
+    { t:"Domain narrowed: QA / DevOps roles", s:"passed" },
+    { t:"Market size validated (tens of millions of non-native devs)", s:"passed" },
+    { t:"Scope set: content-focused, not real-time audio", s:"passed" },
+  ]},
+  { id:"01·engine", name:"Engine", status:"passed", steps:[
+    { t:"Prompt chain → evaluation + strengthened answer + patterns", s:"passed" },
+    { t:"Python engine on Anthropic API (claude-sonnet-5)", s:"passed" },
+    { t:"English-only output", s:"passed" },
+    { t:"max_tokens raised — no truncated responses", s:"passed" },
+  ]},
+  { id:"02·shell", name:"Product Shell", status:"passed", steps:[
+    { t:"Landing page + hero sample review (before → after)", s:"passed" },
+    { t:"Track-selection menu (5 categories, counts)", s:"passed" },
+    { t:"Coach screen: question → answer → review", s:"passed" },
+    { t:"Paste your own question (no storage)", s:"passed" },
+    { t:"Question bank → 60 (12 per category)", s:"passed" },
+    { t:"Clear answer + results on question switch", s:"passed" },
+    { t:"Closed sample flow (Manual + STAR, 2 each)", s:"passed" },
+  ]},
+  { id:"03·calibrate", name:"Calibration", status:"running", steps:[
+    { t:"Never penalize concise answers", s:"passed" },
+    { t:"Three tiers: rejection / optional / strong", s:"passed" },
+    { t:"'No rejection-level issue' when passing", s:"passed" },
+    { t:"Strengthened answer stays at candidate level", s:"passed" },
+    { t:"Softened absolute claims in phrasebook", s:"passed" },
+    { t:"Factual errors always rejection-level", s:"passed" },
+    { t:"Strengthened answer corrects wrong claims", s:"passed" },
+    { t:"'Optional' section only for passing answers", s:"passed" },
+    { t:"Build test set: ~5 weak + ~5 strong answers", s:"running" },
+    { t:"Run regression routine (three checks)", s:"running" },
+    { t:"Curate the 60-question bank", s:"queued" },
+  ]},
+  { id:"04·deploy", name:"Deploy", status:"queued", steps:[
+    { t:"Serverless function holds the API key (never in frontend)", s:"queued" },
+    { t:"Host app (Vercel / Netlify) → public URL", s:"queued" },
+    { t:"Ship static landing page first", s:"queued" },
+    { t:"Open access — no login wall in v1", s:"queued" },
+  ]},
+  { id:"05·users", name:"First Users", status:"queued", steps:[
+    { t:"Get 5–10 real users", s:"queued" },
+    { t:"Track two signals: useful? returning?", s:"queued" },
+    { t:"Distribution: Reddit, LinkedIn, dev communities, content", s:"queued" },
+  ]},
+  { id:"06·monetize", name:"v1.1 Monetize", status:"deferred", steps:[
+    { t:"Accounts + credits", s:"queued" },
+    { t:"Freemium: ~6 free, then credits / sign-up", s:"queued" },
+    { t:"Question collection — questions only, never answers", s:"queued" },
+    { t:"Genuine consent design (GDPR-aware, lawyer review)", s:"queued" },
+    { t:"Adjacent roles: SDET, SRE, platform", s:"queued" },
+  ]},
+  { id:"07·scale", name:"Expansion", status:"deferred", steps:[
+    { t:"More job families — only after proving QA + template", s:"queued" },
+    { t:"Vertical & language as parameters, never hardcoded", s:"queued" },
+  ]},
+];
+
+const GLYPH = { passed:"✓", running:"▶", queued:"○", deferred:"⋯" };
+const STEPG = { passed:"✓", running:"▶", queued:"○" };
+const BADGE = { passed:"passed", running:"running", queued:"queued", deferred:"deferred" };
+const done = st => st.steps.filter(x=>x.s==="passed").length;
+
+const total = STAGES.reduce((a,s)=>a+s.steps.length,0);
+const passed = STAGES.reduce((a,s)=>a+done(s),0);
+document.getElementById("checks").innerHTML = `<b>${passed}/${total}</b> checks passed`;
+
+document.getElementById("lane").innerHTML = STAGES.map(s=>{
+  const d=done(s), t=s.steps.length;
+  const glyph = s.status==="passed" ? "✓" : (s.status==="running" ? "▶" : (s.n+"" , s.id.slice(0,2)));
+  return `<button class="node ${s.status}" data-goto="job-${s.id.slice(0,2)}">
+    <div class="rail"><span class="ln left"></span><div class="ring">${s.status==="passed"?"✓":s.status==="running"?"▶":s.id.slice(0,2)}</div><span class="ln right"></span></div>
+    <div class="nid">${s.id}</div>
+    <div class="nname">${s.name}</div>
+    <div class="ncount">${d}/${t}</div>
+  </button>`;
+}).join("");
+
+document.getElementById("jobs").innerHTML = STAGES.map(s=>{
+  const d=done(s), t=s.steps.length;
+  const steps = s.steps.map(x=>`
+    <div class="step ${x.s}"><span class="g">${STEPG[x.s]}</span>
+      <span>${x.t}${x.s==="running"?'<span class="rtag">running</span>':''}</span>
+    </div>`).join("");
+  return `<section class="job ${s.status}" id="job-${s.id.slice(0,2)}">
+    <div class="stripe"></div>
+    <div class="jbody">
+      <div class="jhead">
+        <span class="jglyph">${GLYPH[s.status]}</span>
+        <span class="jid">${s.id}</span>
+        <span class="jname">${s.name}</span>
+        <span class="jbadge">${BADGE[s.status]}</span>
+      </div>
+      <div class="jcount">${d} / ${t} checks passed</div>
+      <div class="log">${steps}</div>
+    </div>
+  </section>`;
+}).join("");
+
+document.querySelectorAll("[data-goto]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    const el=document.getElementById(b.dataset.goto);
+    el.scrollIntoView({behavior:"smooth",block:"start"});
+    el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+  });
+});
+</script>
+</body>
+</html>
