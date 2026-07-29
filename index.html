@@ -89,6 +89,7 @@
   .step.queued .g{color:#B7C0C4;}
   .step.queued{color:var(--muted);}
   .step .rtag{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--run);background:var(--teal-soft);padding:1px 7px;border-radius:12px;margin-left:6px;white-space:nowrap;}
+  .step .rtag.nb{color:var(--muted);background:#EDF0F2;}
 
   .legend{display:flex;flex-wrap:wrap;gap:18px;margin:26px 0 0;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);}
   .legend span{display:flex;align-items:center;gap:8px;}
@@ -110,11 +111,11 @@
     <span class="sep">|</span>
     <span>branch <b>main · v1</b></span>
     <span class="sep">|</span>
-    <span>stage <b>03 calibrate</b></span>
+    <span>stage <b>04 deploy</b></span>
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>27 Jul 2026</b></span>
+    <span>updated <b>29 Jul 2026</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -160,7 +161,7 @@ const STAGES = [
     { t:"Clear answer + results on question switch", s:"passed" },
     { t:"Closed sample flow (Manual + STAR, 2 each)", s:"passed" },
   ]},
-  { id:"03·calibrate", name:"Calibration", status:"running", steps:[
+  { id:"03·calibrate", name:"Calibration", status:"passed", steps:[
     { t:"Never penalize concise answers", s:"passed" },
     { t:"Three tiers: rejection / optional / strong", s:"passed" },
     { t:"'No rejection-level issue' when passing", s:"passed" },
@@ -169,11 +170,11 @@ const STAGES = [
     { t:"Factual errors always rejection-level", s:"passed" },
     { t:"Strengthened answer corrects wrong claims", s:"passed" },
     { t:"'Optional' section only for passing answers", s:"passed" },
-    { t:"Build test set: ~5 weak + ~5 strong answers", s:"running" },
-    { t:"Run regression routine (three checks)", s:"running" },
-    { t:"Curate the 60-question bank", s:"queued" },
+    { t:"Build test set: ~5 weak + ~5 strong answers", s:"passed" },
+    { t:"Run regression routine (three checks)", s:"passed" },
+    { t:"Curate the 60-question bank", s:"running", nb:true },
   ]},
-  { id:"04·deploy", name:"Deploy", status:"queued", steps:[
+  { id:"04·deploy", name:"Deploy", status:"running", steps:[
     { t:"Serverless function holds the API key (never in frontend)", s:"queued" },
     { t:"Host app (Vercel / Netlify) → public URL", s:"queued" },
     { t:"Ship static landing page first", s:"queued" },
@@ -200,14 +201,14 @@ const STAGES = [
 const GLYPH = { passed:"✓", running:"▶", queued:"○", deferred:"⋯" };
 const STEPG = { passed:"✓", running:"▶", queued:"○" };
 const BADGE = { passed:"passed", running:"running", queued:"queued", deferred:"deferred" };
-const done = st => st.steps.filter(x=>x.s==="passed").length;
+const done = st => st.steps.filter(x=>x.s==="passed" && !x.nb).length;
 
-const total = STAGES.reduce((a,s)=>a+s.steps.length,0);
+const total = STAGES.reduce((a,s)=>a+s.steps.filter(x=>!x.nb).length,0);
 const passed = STAGES.reduce((a,s)=>a+done(s),0);
 document.getElementById("checks").innerHTML = `<b>${passed}/${total}</b> checks passed`;
 
 document.getElementById("lane").innerHTML = STAGES.map(s=>{
-  const d=done(s), t=s.steps.length;
+  const d=done(s), t=s.steps.filter(x=>!x.nb).length;
   const glyph = s.status==="passed" ? "✓" : (s.status==="running" ? "▶" : (s.n+"" , s.id.slice(0,2)));
   return `<button class="node ${s.status}" data-goto="job-${s.id.slice(0,2)}">
     <div class="rail"><span class="ln left"></span><div class="ring">${s.status==="passed"?"✓":s.status==="running"?"▶":s.id.slice(0,2)}</div><span class="ln right"></span></div>
@@ -218,10 +219,10 @@ document.getElementById("lane").innerHTML = STAGES.map(s=>{
 }).join("");
 
 document.getElementById("jobs").innerHTML = STAGES.map(s=>{
-  const d=done(s), t=s.steps.length;
+  const d=done(s), t=s.steps.filter(x=>!x.nb).length;
   const steps = s.steps.map(x=>`
     <div class="step ${x.s}"><span class="g">${STEPG[x.s]}</span>
-      <span>${x.t}${x.s==="running"?'<span class="rtag">running</span>':''}</span>
+      <span>${x.t}${x.nb?'<span class="rtag nb">non-blocking</span>':(x.s==="running"?'<span class="rtag">running</span>':'')}</span>
     </div>`).join("");
   return `<section class="job ${s.status}" id="job-${s.id.slice(0,2)}">
     <div class="stripe"></div>
