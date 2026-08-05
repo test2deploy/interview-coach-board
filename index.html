@@ -115,7 +115,7 @@
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>29 Jul 2026</b></span>
+    <span>updated <b>4 Aug 2026</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -175,9 +175,12 @@ const STAGES = [
     { t:"Curate the 60-question bank", s:"running", nb:true },
   ]},
   { id:"04·deploy", name:"Deploy", status:"running", steps:[
-    { t:"Serverless function holds the API key (never in frontend)", s:"queued" },
-    { t:"Host app (Vercel / Netlify) → public URL", s:"queued" },
-    { t:"Ship static landing page first", s:"queued" },
+    { t:"Verify Node.js + npm toolchain", s:"passed" },
+    { t:"Scaffold local Vite + React project", s:"passed" },
+    { t:"App runs locally (real UI, not the demo)", s:"passed" },
+    { t:"Serverless /api/evaluate: key, rate limits, global cap, invariants, structured outputs", s:"running" },
+    { t:"Wire frontend to /api/evaluate; remove SYSTEM from bundle", s:"queued" },
+    { t:"Host app on Vercel → public URL", s:"queued" },
     { t:"Open access — no login wall in v1", s:"queued" },
   ]},
   { id:"05·users", name:"First Users", status:"queued", steps:[
