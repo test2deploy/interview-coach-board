@@ -115,7 +115,7 @@
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>4 Aug 2026</b></span>
+    <span>updated <b>22 Aug 2026</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -179,10 +179,14 @@ const STAGES = [
     { t:"Scaffold local Vite + React project", s:"passed" },
     { t:"App runs locally (real UI, not the demo)", s:"passed" },
     { t:"Write /api/evaluate (validation, rate limits, global cap, invariants, structured outputs, tagged input)", s:"passed" },
-    { t:"Set API key as a secret env var + Anthropic Console spend limit", s:"running" },
-    { t:"Wire frontend to /api/evaluate; remove SYSTEM from bundle", s:"queued" },
-    { t:"Test end-to-end locally (vercel dev)", s:"queued" },
-    { t:"Host app on Vercel → public URL", s:"queued" },
+    { t:"API key in local .env (git-ignored) + Anthropic Console spend limit $50", s:"passed" },
+    { t:"Wire frontend to /api/evaluate; remove SYSTEM from bundle", s:"passed" },
+    { t:"Test end-to-end locally (vercel dev) — real evaluation works", s:"passed" },
+    { t:"Update architecture doc to match implementation", s:"passed" },
+    { t:"Deploy to Vercel (vercel --prod) → public URL", s:"running" },
+    { t:"Add ANTHROPIC_API_KEY to Vercel env vars", s:"queued" },
+    { t:"Live smoke test on the public URL", s:"queued" },
+    { t:"Add live domain to ALLOWED_ORIGINS (tighten origin check)", s:"queued" },
     { t:"Open access — no login wall in v1", s:"queued" },
   ]},
   { id:"05·users", name:"First Users", status:"queued", steps:[
@@ -200,6 +204,7 @@ const STAGES = [
   { id:"07·scale", name:"Expansion", status:"deferred", steps:[
     { t:"More job families — only after proving QA + template", s:"queued" },
     { t:"Vertical & language as parameters, never hardcoded", s:"queued" },
+    { t:"Multilingual output (language as a setting) — each new language gated on its own expert QA/calibration (part-time reviewer per language as we grow)", s:"queued" },
   ]},
 ];
 
