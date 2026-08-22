@@ -111,11 +111,11 @@
     <span class="sep">|</span>
     <span>branch <b>main · v1</b></span>
     <span class="sep">|</span>
-    <span>stage <b>04 deploy</b></span>
+    <span>stage <b>05 users</b></span>
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>22 Aug 2026</b></span>
+    <span>updated <b>22 Aug 2026 · LIVE</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -174,7 +174,7 @@ const STAGES = [
     { t:"Run regression routine (three checks)", s:"passed" },
     { t:"Curate the 60-question bank", s:"running", nb:true },
   ]},
-  { id:"04·deploy", name:"Deploy", status:"running", steps:[
+  { id:"04·deploy", name:"Deploy", status:"passed", steps:[
     { t:"Verify Node.js + npm toolchain", s:"passed" },
     { t:"Scaffold local Vite + React project", s:"passed" },
     { t:"App runs locally (real UI, not the demo)", s:"passed" },
@@ -183,13 +183,13 @@ const STAGES = [
     { t:"Wire frontend to /api/evaluate; remove SYSTEM from bundle", s:"passed" },
     { t:"Test end-to-end locally (vercel dev) — real evaluation works", s:"passed" },
     { t:"Update architecture doc to match implementation", s:"passed" },
-    { t:"Deploy to Vercel (vercel --prod) → public URL", s:"running" },
-    { t:"Add ANTHROPIC_API_KEY to Vercel env vars", s:"queued" },
-    { t:"Live smoke test on the public URL", s:"queued" },
-    { t:"Add live domain to ALLOWED_ORIGINS (tighten origin check)", s:"queued" },
-    { t:"Open access — no login wall in v1", s:"queued" },
+    { t:"Deploy to Vercel (vercel --prod) → LIVE at nextgeninterviewcoach.vercel.app", s:"passed" },
+    { t:"ANTHROPIC_API_KEY added to Vercel production env", s:"passed" },
+    { t:"Live smoke test — real evaluation, calibration, rate limit all verified", s:"passed" },
+    { t:"Live domain added to ALLOWED_ORIGINS (origin check tightened)", s:"passed" },
+    { t:"Open access — no login wall in v1", s:"passed" },
   ]},
-  { id:"05·users", name:"First Users", status:"queued", steps:[
+  { id:"05·users", name:"First Users", status:"running", steps:[
     { t:"Get 5–10 real users", s:"queued" },
     { t:"Track two signals: useful? returning?", s:"queued" },
     { t:"Distribution: Reddit, LinkedIn, dev communities, content", s:"queued" },
