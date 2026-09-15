@@ -116,7 +116,7 @@
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>13 Sep 2026 · freemium foundation verified</b></span>
+    <span>updated <b>15 Sep 2026 · identity + usage enforcement live</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -217,12 +217,14 @@ const STAGES = [
     { t:"Supabase project created: verifycue-prod (East US), anonymous sign-in enabled", s:"passed" },
     { t:"Atomic + idempotent usage reservation schema deployed", s:"passed" },
     { t:"Real database smoke: anonymous / Free / Premium / replay / release / grants", s:"passed" },
-    { t:"Connect Supabase identity + request ID to /api/evaluate lifecycle", s:"queued" },
-    { t:"Require account creation after the first anonymous evaluation", s:"queued" },
+    { t:"Connect Supabase identity + stable request ID to /api/evaluate lifecycle", s:"passed" },
+    { t:"Enforce one anonymous evaluation; deny the second before provider call", s:"passed" },
+    { t:"Live preview + production verification — lazy identity, completed reservation, 37/37 tests, audit 0", s:"passed" },
+    { t:"Build account creation + anonymous-to-Free conversion UI", s:"running" },
     { t:"Free-limit and Premium-upgrade UI states", s:"queued" },
     { t:"Stripe $7.99 Checkout + customer portal", s:"queued" },
     { t:"Webhook projection + idempotency + reconciliation", s:"queued" },
-    { t:"Enable CAPTCHA before public anonymous-auth rollout", s:"queued" },
+    { t:"Enable CAPTCHA before broader anonymous-auth traffic", s:"queued" },
   ]},
   { id:"07·scale", name:"Expansion", status:"deferred", steps:[
     { t:"More job families — only after proving QA + template", s:"queued" },
