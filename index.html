@@ -116,7 +116,7 @@
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>15 Sep 2026 · identity + usage enforcement live</b></span>
+    <span>updated <b>16 Sep 2026 · account access + recovery deployed</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -220,7 +220,14 @@ const STAGES = [
     { t:"Connect Supabase identity + stable request ID to /api/evaluate lifecycle", s:"passed" },
     { t:"Enforce one anonymous evaluation; deny the second before provider call", s:"passed" },
     { t:"Live preview + production verification — lazy identity, completed reservation, 37/37 tests, audit 0", s:"passed" },
-    { t:"Build account creation + anonymous-to-Free conversion UI", s:"running" },
+    { t:"Build account creation + anonymous-to-Free conversion UI", s:"passed" },
+    { t:"Verify same-user conversion + Free monthly allowance in production", s:"passed" },
+    { t:"Existing-account landing sign-in + session-aware Continue", s:"passed" },
+    { t:"Local sign-out + clear in-memory rehearsal state", s:"passed" },
+    { t:"Branded auth email delivery + exact setup/recovery redirects", s:"passed" },
+    { t:"Forgot-password recovery UI + production deployment", s:"passed" },
+    { t:"Fresh-link production password-recovery smoke", s:"running" },
+    { t:"Define profile/account page + persisted history contract", s:"queued" },
     { t:"Free-limit and Premium-upgrade UI states", s:"queued" },
     { t:"Stripe $7.99 Checkout + customer portal", s:"queued" },
     { t:"Webhook projection + idempotency + reconciliation", s:"queued" },
