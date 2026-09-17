@@ -4,8 +4,7 @@ A single-page **release-pipeline dashboard** that tracks the build of the Interv
 
 The board shows every stage of the project as a pipeline **job**, and every task as a **check** (`passed` · `running` · `queued` · `deferred`). It reflects real production status, not a wishlist.
 
-> **Live board:** `https://<your-username>.github.io/<your-repo>/`
-> *(replace with your actual GitHub Pages URL)*
+> **Live board:** https://test2deploy.github.io/interview-coach-board/
 
 ---
 
