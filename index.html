@@ -116,7 +116,7 @@
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>17 Sep 2026 · Profile V1 deployed; retention cron deferred</b></span>
+    <span>updated <b>19 Sep 2026 · Billing Steps 1–2 complete; Supabase smoke passed</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -228,12 +228,14 @@ const STAGES = [
     { t:"Forgot-password recovery UI + production deployment", s:"passed" },
     { t:"Fresh-link production password-recovery smoke", s:"running" },
     { t:"Profile contract + private persistence boundary", s:"passed" },
-    { t:"Profile UI: allowance, initials avatar, saved reviews, job applications", s:"passed" },
+    { t:"Profile UI: allowance, initials avatar, review history, job applications", s:"passed" },
     { t:"Password reset, sign out, and typed DELETE account removal", s:"passed" },
     { t:"120-day Free retention contract + endpoint staged; cron deferred pending weekend smoke", s:"running" },
+    { t:"Billing V1 architecture + fail-closed entitlement reducer locked and tested", s:"passed" },
+    { t:"Billing projection + forced-RLS webhook ledger deployed; live Supabase smoke passed", s:"passed" },
     { t:"Free-limit and Premium-upgrade UI states", s:"queued" },
     { t:"Stripe $7.99 Checkout + customer portal", s:"queued" },
-    { t:"Webhook projection + idempotency + reconciliation", s:"queued" },
+    { t:"Signature-verified webhook endpoint + reconciliation", s:"queued" },
     { t:"Enable CAPTCHA before broader anonymous-auth traffic", s:"queued" },
   ]},
   { id:"07·scale", name:"Expansion", status:"deferred", steps:[
