@@ -116,7 +116,7 @@
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>19 Sep 2026 · Billing Steps 1–2 complete; Supabase smoke passed</b></span>
+    <span>updated <b>21 Sep 2026 · Billing V1 sandbox flow verified end to end</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -234,8 +234,8 @@ const STAGES = [
     { t:"Billing V1 architecture + fail-closed entitlement reducer locked and tested", s:"passed" },
     { t:"Billing projection + forced-RLS webhook ledger deployed; live Supabase smoke passed", s:"passed" },
     { t:"Free-limit and Premium-upgrade UI states", s:"queued" },
-    { t:"Stripe $7.99 Checkout + customer portal", s:"queued" },
-    { t:"Signature-verified webhook endpoint + reconciliation", s:"queued" },
+    { t:"Stripe $7.99 Checkout + customer portal — sandbox smoke passed", s:"passed" },
+    { t:"Signature-verified webhook + manual resend recovery — sandbox smoke passed", s:"passed" },
     { t:"Enable CAPTCHA before broader anonymous-auth traffic", s:"queued" },
   ]},
   { id:"07·scale", name:"Expansion", status:"deferred", steps:[
