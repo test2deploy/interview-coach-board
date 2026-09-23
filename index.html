@@ -116,7 +116,7 @@
     <span class="grow"></span>
     <span id="checks"></span>
     <span class="sep">|</span>
-    <span>updated <b>22 Sep 2026 · Premium + History UI production smoke passed</b></span>
+    <span>updated <b>23 Sep 2026 · Live Stripe Checkout smoke passed</b></span>
   </div>
 
   <p class="lane-label">Pipeline</p>
@@ -235,8 +235,9 @@ const STAGES = [
     { t:"Billing projection + forced-RLS webhook ledger deployed; live Supabase smoke passed", s:"passed" },
     { t:"Free-limit Upgrade + plan-aware billing UI — production smoke passed", s:"passed" },
     { t:"Opt-in private History save / reopen / delete UI — production smoke passed", s:"passed" },
-    { t:"Stripe $7.99 Checkout + customer portal — sandbox smoke passed", s:"passed" },
-    { t:"Signature-verified webhook + manual resend recovery — sandbox smoke passed", s:"passed" },
+    { t:"Stripe $7.99 Checkout + customer portal — sandbox and live Checkout smoke passed", s:"passed" },
+    { t:"Signature-verified webhook + manual resend recovery — sandbox smoke passed; live destination configured", s:"passed" },
+    { t:"Live Stripe configuration + hosted Checkout smoke — production verified", s:"passed" },
     { t:"Enable CAPTCHA before broader anonymous-auth traffic", s:"queued" },
   ]},
   { id:"07·scale", name:"Expansion", status:"deferred", steps:[
